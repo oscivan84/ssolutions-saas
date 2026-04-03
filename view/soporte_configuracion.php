@@ -180,7 +180,7 @@ function cargarConfiguracionActual() {
     $(".config-input").each(function() {
         var input = $(this);
         var clave = input.data("clave");
-        $.getJSON("../landingV2/ajax/ConfigAjax.php?op=get&clave=" + clave, function(data) {
+        $.getJSON("" + AJAX + "ConfigAjax.php?op=get&clave=" + clave, function(data) {
             if (data && data.valor !== undefined) {
                 input.val(data.valor);
             }
@@ -198,7 +198,7 @@ function guardarConfiguracion() {
     });
 
     $.ajax({
-        url: "../landingV2/ajax/ConfigAjax.php?op=guardarMultiple",
+        url: "" + AJAX + "ConfigAjax.php?op=guardarMultiple",
         type: "POST",
         data: { configs: JSON.stringify(configs) },
         success: function(resp) {
@@ -220,7 +220,7 @@ function generarApiKey() {
 }
 
 function cargarPlantillas() {
-    $.getJSON("../landingV2/ajax/WhatsAppAjax.php?op=plantillas", function(data) {
+    $.getJSON("" + AJAX + "WhatsAppAjax.php?op=plantillas", function(data) {
         if (!data || data.length === 0) {
             $("#plantillas-container").html('<p class="text-muted">No hay plantillas configuradas</p>');
             return;

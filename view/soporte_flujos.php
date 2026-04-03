@@ -145,7 +145,7 @@
 </style>
 
 <script>
-var FLUJOS_URL = "../landingV2/ajax/FlujosAjax.php";
+var FLUJOS_URL = "" + AJAX + "FlujosAjax.php";
 var nodos = {};
 var selectedNode = null;
 var dragState = null;

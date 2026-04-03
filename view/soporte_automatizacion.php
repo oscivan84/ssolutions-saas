@@ -134,7 +134,7 @@
 </section>
 
 <script>
-var BASE = "../landingV2/ajax/AutomatizacionAjax.php";
+var BASE = "" + AJAX + "AutomatizacionAjax.php";
 
 $(document).ready(function() {
     cargarMetricasVentas();

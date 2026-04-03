@@ -233,7 +233,7 @@ $(document).ready(function() {
 
 // ============ HERO METRICS (lo primero que ve) ============
 function cargarMetricasHero() {
-    $.getJSON("../landingV2/ajax/AutomatizacionAjax.php?op=metricasVentas", function(d) {
+    $.getJSON("" + AJAX + "AutomatizacionAjax.php?op=metricasVentas", function(d) {
         $("#hero-recuperados").text(d.clientes_recuperados || 0);
         $("#hero-mensajes").text(d.mensajes_enviados || 0);
         $("#hero-conversion").text((d.tasa_conversion || 0) + "%");
@@ -247,7 +247,7 @@ function cargarMetricasHero() {
 
 // ============ SCORES DASHBOARD ============
 function cargarScoresDashboard() {
-    $.getJSON("../landingV2/ajax/AutomatizacionAjax.php?op=scoresResumen", function(d) {
+    $.getJSON("" + AJAX + "AutomatizacionAjax.php?op=scoresResumen", function(d) {
         if (!d) return;
         $("#score-hot").text(d.calientes || 0);
         $("#score-warm").text(d.tibios || 0);
@@ -257,7 +257,7 @@ function cargarScoresDashboard() {
 
 // ============ CLIENTES SIN RESPUESTA (para boton recuperar) ============
 function cargarClientesPendientes() {
-    $.getJSON("../landingV2/ajax/AutomatizacionAjax.php?op=clientesSinRespuesta", function(data) {
+    $.getJSON("" + AJAX + "AutomatizacionAjax.php?op=clientesSinRespuesta", function(data) {
         _clientesSinResp = data || [];
         var n = _clientesSinResp.length;
         if (n > 0) {
@@ -280,7 +280,7 @@ function recuperarClientesAhora() {
     mostrarFeedback("info", "<i class='fa fa-spinner fa-spin'></i> Programando " + n + " mensajes...", "");
 
     var lista = _clientesSinResp.map(function(c) { return {telefono: c.telefono, nombre: c.nombre || 'Cliente'}; });
-    $.post("../landingV2/ajax/AutomatizacionAjax.php?op=recuperarClientes", {telefonos: JSON.stringify(lista)}, function(resp) {
+    $.post("" + AJAX + "AutomatizacionAjax.php?op=recuperarClientes", {telefonos: JSON.stringify(lista)}, function(resp) {
         var r = JSON.parse(resp);
         if (r.success) {
             // Micro-feedback con expectativa psicológica
@@ -316,7 +316,7 @@ function mostrarFeedback(tipo, html, icono) {
 
 // ============ PRUEBA SOCIAL: Último cliente recuperado ============
 function cargarUltimoRecuperado() {
-    $.getJSON("../landingV2/ajax/AutomatizacionAjax.php?op=ultimoRecuperado", function(d) {
+    $.getJSON("" + AJAX + "AutomatizacionAjax.php?op=ultimoRecuperado", function(d) {
         if (!d || !d.encontrado) return;
 
         var hace = formatearTiempo(d.hace_minutos);
@@ -347,7 +347,7 @@ function escapeHtml(text) {
 
 // ============ ESTADISTICAS OPERATIVAS ============
 function cargarEstadisticas() {
-    $.getJSON("../landingV2/ajax/DashboardAjax.php?op=stats", function(data) {
+    $.getJSON("" + AJAX + "DashboardAjax.php?op=stats", function(data) {
         var t = data.tickets || {};
         var d = data.diagnosticos || {};
 
@@ -373,7 +373,7 @@ function cargarEstadisticas() {
         $("#tbody-tecnicos").html(tbody || "<tr><td colspan='3' class='text-center text-muted'>Sin datos</td></tr>");
     });
 
-    $.getJSON("../landingV2/ajax/DiagnosticoAjax.php?op=list", function(data) {
+    $.getJSON("" + AJAX + "DiagnosticoAjax.php?op=list", function(data) {
         var tbody = "";
         (data.aaData || []).slice(0, 5).forEach(function(row) {
             tbody += "<tr><td>" + row[1] + "</td><td>" + row[2] + "</td><td>" + row[3] + "</td><td>" + row[8] + "</td><td>" + row[9] + "</td></tr>";
@@ -381,7 +381,7 @@ function cargarEstadisticas() {
         $("#tbody-diagnosticos").html(tbody || "<tr><td colspan='5' class='text-center text-muted'>Sin diagnosticos</td></tr>");
     });
 
-    $.getJSON("../landingV2/ajax/WhatsAppAjax.php?op=configuracion", function(data) {
+    $.getJSON("" + AJAX + "WhatsAppAjax.php?op=configuracion", function(data) {
         if (data.configurado) {
             $("#whatsapp-status").html('<span class="label label-success"><i class="fa fa-check"></i> Conectado</span> <small>ID: ' + data.phone_id + '</small>');
         } else {

@@ -141,8 +141,8 @@
 </section>
 
 <script>
-var BASE_CONF = "../landingV2/ajax/ConfigAjax.php";
-var BASE_OB = "../landingV2/ajax/NotificacionAjax.php";
+var BASE_CONF = "" + AJAX + "ConfigAjax.php";
+var BASE_OB = "" + AJAX + "NotificacionAjax.php";
 
 $(document).ready(function() { verificarProgreso(); });
 

@@ -76,7 +76,7 @@
 <!-- ============================================================ -->
 <script>
 (function() {
-    var NOTIF_URL = "../landingV2/ajax/NotificacionAjax.php";
+    var NOTIF_URL = "" + AJAX + "NotificacionAjax.php";
     var _lastCount = 0;
 
     // Polling cada 30 segundos

@@ -102,7 +102,7 @@ var diagActualId = null;
 
 $(document).ready(function() {
     tablaDiag = $("#tbl-diagnosticos").DataTable({
-        ajax: { url: "../landingV2/ajax/DiagnosticoAjax.php?op=list", dataSrc: "aaData" },
+        ajax: { url: "" + AJAX + "DiagnosticoAjax.php?op=list", dataSrc: "aaData" },
         columns: [
             { data: "0" }, { data: "1" }, { data: "2" }, { data: "3" },
             { data: "4" }, { data: "5" }, { data: "6" }, { data: "7" },
@@ -121,7 +121,7 @@ $(document).ready(function() {
         var btn = $(this);
         btn.prop("disabled", true).html('<i class="fa fa-spinner fa-spin"></i> Generando...');
 
-        $.getJSON("../landingV2/ajax/DashboardAjax.php?op=recomendacionesIA&iddiagnostico=" + diagActualId, function(data) {
+        $.getJSON("" + AJAX + "DashboardAjax.php?op=recomendacionesIA&iddiagnostico=" + diagActualId, function(data) {
             btn.prop("disabled", false).html('<i class="fa fa-magic"></i> Generar Recomendaciones IA');
 
             if (data.recomendaciones) {
@@ -143,7 +143,7 @@ $(document).ready(function() {
 });
 
 function cargarEstadisticasDiag() {
-    $.getJSON("../landingV2/ajax/DiagnosticoAjax.php?op=stats", function(s) {
+    $.getJSON("" + AJAX + "DiagnosticoAjax.php?op=stats", function(s) {
         if (s) {
             $("#stat-total").text(s.total || 0);
             $("#stat-criticos").text(s.criticos || 0);
@@ -157,7 +157,7 @@ function verDiagnostico(id) {
     diagActualId = id;
     $("#modalDiagnostico").modal("show");
 
-    $.getJSON("../landingV2/ajax/DiagnosticoAjax.php?op=get&id=" + id, function(d) {
+    $.getJSON("" + AJAX + "DiagnosticoAjax.php?op=get&id=" + id, function(d) {
         var html = '<div class="row">';
 
         // Info del sistema

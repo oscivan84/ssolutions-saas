@@ -229,7 +229,7 @@ $(document).ready(function() {
 });
 
 function cargarTablaTickets(estado) {
-    var url = "../landingV2/ajax/TicketAjax.php?op=list";
+    var url = "" + AJAX + "TicketAjax.php?op=list";
     if (estado) url += "&estado=" + estado;
 
     if (tablaTickets) tablaTickets.destroy();
@@ -261,7 +261,7 @@ function nuevoTicket() {
 
 function guardarTicket() {
     $.ajax({
-        url: "../landingV2/ajax/TicketAjax.php?op=SaveOrUpdate",
+        url: "" + AJAX + "TicketAjax.php?op=SaveOrUpdate",
         type: "POST",
         data: $("#frmTicket").serialize(),
         success: function(resp) {
@@ -281,7 +281,7 @@ function verTicket(id) {
     ticketActualId = id;
     $("#modalVerTicket").modal("show");
 
-    $.getJSON("../landingV2/ajax/TicketAjax.php?op=get&id=" + id, function(t) {
+    $.getJSON("" + AJAX + "TicketAjax.php?op=get&id=" + id, function(t) {
         var html = '<div class="row">';
         html += '<div class="col-md-6">';
         html += '<table class="table table-condensed">';
@@ -334,7 +334,7 @@ function verTicket(id) {
 }
 
 function cargarMantenimientosTicket(idticket) {
-    $.getJSON("../landingV2/ajax/MantenimientoAjax.php?op=listPorTicket&idticket=" + idticket, function(data) {
+    $.getJSON("" + AJAX + "MantenimientoAjax.php?op=listPorTicket&idticket=" + idticket, function(data) {
         var items = data.aaData || [];
         if (items.length === 0) {
             $("#mantenimientos-lista").html('<p class="text-muted">Sin mantenimientos registrados</p>');
@@ -350,7 +350,7 @@ function cargarMantenimientosTicket(idticket) {
 }
 
 function cargarMensajesTicket(idticket) {
-    $.getJSON("../landingV2/ajax/WhatsAppAjax.php?op=listPorTicket&idticket=" + idticket, function(data) {
+    $.getJSON("" + AJAX + "WhatsAppAjax.php?op=listPorTicket&idticket=" + idticket, function(data) {
         if (!data || data.length === 0) {
             $("#whatsapp-lista").html('<p class="text-muted">Sin mensajes</p>');
             return;
@@ -369,7 +369,7 @@ function cargarMensajesTicket(idticket) {
 }
 
 function editarTicket(id) {
-    $.getJSON("../landingV2/ajax/TicketAjax.php?op=get&id=" + id, function(t) {
+    $.getJSON("" + AJAX + "TicketAjax.php?op=get&id=" + id, function(t) {
         $("#idticket").val(t.idticket);
         $("#idpersona").val(t.idpersona).trigger("change");
         $("#idusuario").val(t.idusuario).trigger("change");
@@ -389,7 +389,7 @@ function cambiarEstadoTicket(nuevoEstado) {
     if (obs === null) return;
 
     $.ajax({
-        url: "../landingV2/ajax/DashboardAjax.php?op=cambiarEstado",
+        url: "" + AJAX + "DashboardAjax.php?op=cambiarEstado",
         type: "POST",
         data: { idticket: ticketActualId, estado: nuevoEstado, observacion: obs },
         dataType: "json",
@@ -414,7 +414,7 @@ function registrarMantenimiento(idticket) {
 
 function guardarMantenimiento() {
     $.ajax({
-        url: "../landingV2/ajax/MantenimientoAjax.php?op=SaveOrUpdate",
+        url: "" + AJAX + "MantenimientoAjax.php?op=SaveOrUpdate",
         type: "POST",
         data: $("#frmMantenimiento").serialize(),
         success: function(resp) {
