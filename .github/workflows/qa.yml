@@ -1,0 +1,130 @@
+name: QA Pipeline — Deploy Gate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Si CUALQUIER job falla → deploy bloqueado
+jobs:
+
+  # ============================================================
+  # JOB 1: QA Quick — Checklist crítico (30s)
+  # BLOQUEA si falla lo mínimo vital
+  # ============================================================
+  qa-quick:
+    name: Quick Checklist
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run quick checklist
+        run: bash scripts/qa_quick.sh
+
+  # ============================================================
+  # JOB 2: QA Estático PHP — Multi-tenant + Auth + Types
+  # ============================================================
+  qa-php:
+    name: PHP Architecture
+    runs-on: ubuntu-latest
+    needs: qa-quick
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: openssl, json, mbstring
+
+      - name: Multi-tenant isolation
+        run: php tests/arquitectura/test_multitenant.php
+
+      - name: Type string validation
+        run: php tests/arquitectura/test_type_strings.php
+
+      - name: Security checks
+        run: php tests/arquitectura/test_seguridad.php
+
+  # ============================================================
+  # JOB 3: QA API — FastAPI pytest (41 tests)
+  # ============================================================
+  qa-api:
+    name: FastAPI Tests
+    runs-on: ubuntu-latest
+    needs: qa-quick
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: |
+          cd ai-service && pip install -r requirements.txt
+          pip install pytest httpx
+
+      - name: Run API + Chaos tests
+        run: python -m pytest tests/api/ tests/caos/ -v --tb=short
+
+  # ============================================================
+  # JOB 4: QA E2E — Servicios levantados
+  # ============================================================
+  qa-e2e:
+    name: E2E Integration
+    runs-on: ubuntu-latest
+    needs: [qa-php, qa-api]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install AI service
+        run: cd ai-service && pip install -r requirements.txt
+
+      - name: Start AI service
+        run: |
+          cd ai-service
+          nohup python -c "import uvicorn; uvicorn.run('api:app', host='127.0.0.1', port=8100)" &
+          sleep 3
+
+      - name: Run E2E tests
+        env:
+          AI_SERVICE_URL: http://127.0.0.1:8100
+        run: bash scripts/test_e2e.sh
+
+  # ============================================================
+  # JOB 5: QA Master — Validación final completa
+  # Solo si todo lo anterior pasó
+  # ============================================================
+  qa-master:
+    name: DEPLOY GATE
+    runs-on: ubuntu-latest
+    needs: [qa-quick, qa-php, qa-api, qa-e2e]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install deps
+        run: cd ai-service && pip install -r requirements.txt && pip install pytest httpx
+
+      - name: Start AI service
+        run: |
+          cd ai-service
+          nohup python -c "import uvicorn; uvicorn.run('api:app', host='127.0.0.1', port=8100)" &
+          sleep 3
+
+      - name: QA Master — Full validation
+        env:
+          AI_SERVICE_URL: http://127.0.0.1:8100
+        run: bash scripts/qa_master.sh
+
+      - name: Deploy decision
+        if: success()
+        run: echo "✅ ALL QA PASSED — SAFE TO DEPLOY"
+
+      - name: Block deploy
+        if: failure()
+        run: |
+          echo "❌ QA FAILED — DEPLOY BLOCKED"
+          exit 1

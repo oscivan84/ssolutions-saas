@@ -1,0 +1,18 @@
+{
+    "servidor": {
+        "url": "http://localhost/landingV2/api/diagnostico.php",
+        "api_key": ""
+    },
+    "cliente": {
+        "nombre": "",
+        "telefono": "",
+        "email": ""
+    },
+    "opciones": {
+        "optimizar_automaticamente": true,
+        "intervalo_minutos": 0,
+        "enviar_al_servidor": true,
+        "guardar_reporte_local": true,
+        "directorio_reportes": "./reportes"
+    }
+}

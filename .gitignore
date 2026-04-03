@@ -1,0 +1,31 @@
+# Environment
+.env
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+ai-service/__pycache__/
+ai-service/logic/__pycache__/
+ai-service/prompts/__pycache__/
+
+# Simulador outputs
+SIMULADOR/logs/*.log
+SIMULADOR/resultados/*.json
+
+# Temp
+*.tmp
+ss_rate_*
+ss_worker_heartbeat
