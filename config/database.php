@@ -16,14 +16,15 @@ if (file_exists($env_file)) {
     }
 }
 
-// Configuración de BD - misma que el sistema base
+// Configuración de BD
 define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
 define('DB_USER', $_ENV['DB_USER'] ?? 'root');
 define('DB_PASS', $_ENV['DB_PASS'] ?? '');
 define('DB_NAME', $_ENV['DB_NAME'] ?? 'dbsolventas17');
+define('DB_PORT', intval($_ENV['DB_PORT'] ?? 3306));
 
-// Conexión MySQLi (compatible con el sistema existente)
-$conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+// Conexión MySQLi
+$conexion = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT);
 
 if ($conexion->connect_errno) {
     http_response_code(500);
