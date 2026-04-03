@@ -75,8 +75,9 @@ class JobQueue {
                 return null;
             }
 
-            $conexion->query("UPDATE jobs SET estado = 'procesando', intentos = intentos + 1, fecha_inicio = NOW()
-                              WHERE idjob = {$row->idjob}");
+            $stmtUpdate = $conexion->prepare("UPDATE jobs SET estado = 'procesando', intentos = intentos + 1, fecha_inicio = NOW() WHERE idjob = ?");
+            $stmtUpdate->bind_param('i', $row->idjob);
+            $stmtUpdate->execute();
             $conexion->commit();
             $conexion->autocommit(true);
 
