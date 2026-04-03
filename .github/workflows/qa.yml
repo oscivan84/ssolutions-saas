@@ -2,7 +2,7 @@ name: QA Pipeline — Deploy Gate
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   pull_request:
 
 # Si CUALQUIER job falla → deploy bloqueado
